@@ -82,4 +82,4 @@ make -j$(nproc)
 sudo make install
 ```
 
-(modifications en cours)
+(modifications in progress)
