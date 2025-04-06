@@ -81,3 +81,5 @@ cd inetutils-2.0
 make -j$(nproc)
 sudo make install
 ```
+
+(modifications en cours)
