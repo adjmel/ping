@@ -58,11 +58,6 @@ int main(int argc, char **argv)
         display_usage();
         return EXIT_SUCCESS;
     }
-    if (g_ping_info.target_count == 0) 
-    {
-        fprintf(stderr, "ping: usage error: Destination address required\n");
-        return EXIT_FAILURE;
-    }
     
     // initialisation
     signal(SIGINT, handle_signal);
