@@ -144,12 +144,12 @@ void create_packet(struct icmphdr *icmp_hdr, int seq) {
     icmp_hdr->type = ICMP_ECHO;
     icmp_hdr->code = 0;
     icmp_hdr->un.echo.id = g_ping_info.session_id;
-    icmp_hdr->un.echo.sequence = seq;
+    icmp_hdr->un.echo.sequence = seq; // icmp_seq
     icmp_hdr->checksum = 0;
     icmp_hdr->checksum = checksum(icmp_hdr, sizeof(struct icmphdr));
 }
 
-int send_and_receive_ping(int seq, struct timeval *start) {
+int send_ping(int seq, struct timeval *start) {
     char packet[PACKET_SIZE] = {0};
 
     create_packet((struct icmphdr *)packet, seq);
@@ -181,7 +181,7 @@ int handle_single_ping(int seq, int verbose, int is_first_target) {
     }
 
     struct timeval start, end;
-    if (send_and_receive_ping(seq, &start) != 0) {
+    if (send_ping(seq, &start) != 0) {
         g_ping_info.stats.transmitted++;
         return -1;
     }
