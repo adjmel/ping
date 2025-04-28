@@ -80,6 +80,7 @@ cd inetutils-2.0
 ./configure --prefix=/opt/inetutils-2.0
 make -j$(nproc)
 sudo make install
+/opt/inetutils-2.0/bin/ping -V
 ```
 
 (modifications in progress)
