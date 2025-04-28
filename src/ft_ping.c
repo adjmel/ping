@@ -113,9 +113,10 @@ static int receive_ping_reply(char *buffer, struct sockaddr_in *recv_addr, sockl
 
     struct icmphdr *icmp_header = (struct icmphdr *)(buffer + ip_header_len);
     if (icmp_header->type == ICMP_DEST_UNREACH || icmp_header->type == ICMP_TIME_EXCEEDED) {
-        struct ip *original_ip_header = (struct ip *)(buffer + ip_header_len + sizeof(struct icmphdr));
+        //struct ip *original_ip_header = (struct ip *)(buffer + ip_header_len + sizeof(struct icmphdr));
         char src_ip[INET_ADDRSTRLEN];
-        inet_ntop(AF_INET, &(original_ip_header->ip_src), src_ip, INET_ADDRSTRLEN);
+        //inet_ntop(AF_INET, &(original_ip_header->ip_src), src_ip, INET_ADDRSTRLEN);
+        inet_ntop(AF_INET, &(recv_addr->sin_addr), src_ip, INET_ADDRSTRLEN);
         handle_icmp_error(icmp_header, src_ip, seq);
         return -1;
     }

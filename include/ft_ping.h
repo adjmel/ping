@@ -21,14 +21,10 @@
 #ifndef ICMP_NET_UNREACH
 #define ICMP_NET_UNREACH       0 
 #define ICMP_HOST_UNREACH      1 
-#define ICMP_PROT_UNREACH      2 
 #define ICMP_PORT_UNREACH      3 
 #define ICMP_SOURCE_QUENCH     4  
 #define ICMP_REDIRECT          5 
-#define ICMP_ECHO              8  
-#define ICMP_ECHOREPLY         0 
-#define ICMP_PARAMETERPROB     12 
-#define ICMP_TIMESTAMP         13  
+#define ICMP_ECHO              8    
 #define ICMP_TIMESTAMPREPLY    14 
 #define ICMP_INFO_REQUEST      15 
 #define ICMP_INFO_REPLY        16  
@@ -37,8 +33,6 @@
 #endif
 
 #define MAX_FQDN_LENGTH        256
-#define IP_HDR_SIZE            20
-#define ICMP_HDR_SIZE          8 
 #define ICMP_PAYLOAD_SIZE      56 
 #define PACKET_SIZE            ICMP_PAYLOAD_SIZE
 #define MAX_TARGETS            10
