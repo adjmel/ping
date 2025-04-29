@@ -8,6 +8,7 @@ void display_ping_results(char *buffer, int seq, double rtt, int verbose) {
     }
 }
 
+// calculates the round-trip time (RTT) of a packet in milliseconds
 double calculate_rtt(struct timeval *start, struct timeval *end) {
     return (end->tv_sec - start->tv_sec) * 1000.0 + (end->tv_usec - start->tv_usec) / 1000.0;
 }
@@ -27,7 +28,7 @@ static ssize_t receive_packet(int socket_fd, char *buffer, struct sockaddr_in *r
 
 static struct ip *parse_ip_header(char *buffer, int *ip_header_len) {
     struct ip *ip_header = (struct ip *)buffer;
-    *ip_header_len = ip_header->ip_hl * 4;
+    *ip_header_len = ip_header->ip_hl * 4; // is used to calculate the size of the IP header in bytes, as ip_hl gives the size in 4-byte blocks
     return ip_header;
 }
 
@@ -113,9 +114,7 @@ static int receive_ping_reply(char *buffer, struct sockaddr_in *recv_addr, sockl
 
     struct icmphdr *icmp_header = (struct icmphdr *)(buffer + ip_header_len);
     if (icmp_header->type == ICMP_DEST_UNREACH || icmp_header->type == ICMP_TIME_EXCEEDED) {
-        //struct ip *original_ip_header = (struct ip *)(buffer + ip_header_len + sizeof(struct icmphdr));
         char src_ip[INET_ADDRSTRLEN];
-        //inet_ntop(AF_INET, &(original_ip_header->ip_src), src_ip, INET_ADDRSTRLEN);
         inet_ntop(AF_INET, &(recv_addr->sin_addr), src_ip, INET_ADDRSTRLEN);
         handle_icmp_error(icmp_header, src_ip, seq);
         return -1;
@@ -123,26 +122,30 @@ static int receive_ping_reply(char *buffer, struct sockaddr_in *recv_addr, sockl
     return 0;
 }
 
+// Calculate the checksum to verify data integrity
 unsigned short checksum(void *b, int len) {
     unsigned short *buf = b;
     unsigned int sum = 0;
     unsigned short result;
 
+    // We add the two-byte blocks at a time until we have gone through all the data
     for (; len > 1; len -= 2) {
         sum += *buf++;
     }
-    if (len == 1) {
+    if (len == 1) { // If there is only one byte left at the end, we add it
         sum += *(unsigned char *)buf;
     }
+    // We add the data two by two, and if necessary, we adjust the bits that exceed 
+    // 16 bits, then we invert all the bits to obtain the checksum.
     sum = (sum >> 16) + (sum & 0xFFFF);
     sum += (sum >> 16);
-    result = ~sum;
+    result = ~sum; //"~" binary inversion operator
     return result;
 }
 
 void create_packet(struct icmphdr *icmp_hdr, int seq) {
     icmp_hdr->type = ICMP_ECHO;
-    icmp_hdr->code = 0;
+    icmp_hdr->code = 0; // 0 -> simple ping request
     icmp_hdr->un.echo.id = g_ping_info.session_id;
     icmp_hdr->un.echo.sequence = seq; // icmp_seq
     icmp_hdr->checksum = 0;

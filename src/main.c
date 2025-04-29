@@ -5,7 +5,7 @@ void print_ping_header(int verbose)
     if (!verbose) {
         printf("PING %s (%s): %d data bytes\n",
         g_ping_info.original_fqdn,
-        inet_ntoa(g_ping_info.target_addr.sin_addr),
+        inet_ntoa(g_ping_info.target_addr.sin_addr), // Internet Network Address To ASCII, function that is used to convert a binary IP address to a str
         PACKET_SIZE);
     }
     else {

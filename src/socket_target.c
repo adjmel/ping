@@ -10,6 +10,8 @@ int init_socket(void) {
         return -1;
     }
 
+    //setsockopt = to configure the options of a socket
+    // -> timeout if reception operation takes too long
     struct timeval timeout = {1, 0};
     if (setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
         fprintf(stderr, "Setsockopt timeout\n");
@@ -19,10 +21,13 @@ int init_socket(void) {
     return sock_fd;
 }
 
+// translate a domain name (target) or IP address into 
+// a network address that the program can use to send 
+// its ping packets
 int resolve_target(const char *target) {
     struct addrinfo hints, *res = NULL; 
     memset(&hints, 0, sizeof(hints));  
-    hints.ai_family = AF_INET;   
+    hints.ai_family = AF_INET; // IPv4 addresses
     hints.ai_socktype = SOCK_RAW;   
     hints.ai_protocol = IPPROTO_ICMP; 
 
