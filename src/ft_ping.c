@@ -1,11 +1,13 @@
 #include "../include/ft_ping.h"
 
-void display_ping_results(char *buffer, int seq, double rtt, int verbose) {
-    if (verbose) {
-        print_verbose_info(buffer, seq, rtt);
-    } else {
-        print_info(buffer, seq, rtt);
-    }
+void display_ping_results(char *buffer, int seq, double rtt) {
+    struct ip *ip_header = (struct ip*)buffer;
+    int ttl = ip_header->ip_ttl;
+    struct in_addr source_ip = ip_header->ip_src;
+
+    printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n",
+           inet_ntoa(source_ip),
+           seq, ttl, rtt);
 }
 
 // calculates the round-trip time (RTT) of a packet in milliseconds
@@ -174,7 +176,7 @@ int validate_ip_address(const char *ip_str) {
     return (inet_pton(AF_INET, ip_str, &addr) == 1) ? 0 : -1;
 }
 
-int handle_single_ping(int seq, int verbose, int is_first_target) {
+int handle_single_ping(int seq, int is_first_target) {
     (void)is_first_target;
     char ip_str[INET_ADDRSTRLEN];
 
@@ -205,6 +207,6 @@ int handle_single_ping(int seq, int verbose, int is_first_target) {
 
     double rtt = calculate_rtt(&start, &end);
     update_statistics(rtt);
-    display_ping_results(buffer, seq, rtt, verbose);
+    display_ping_results(buffer, seq, rtt);
     return 0;
 }

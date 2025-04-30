@@ -76,7 +76,7 @@ void handle_signal(int sig);
 void init_ping_session(void);
 int resolve_target(const char *target);
 int init_socket(void);
-int handle_single_ping(int seq, int verbose, int is_first_target);
+int handle_single_ping(int seq, int is_first_target);
 void print_statistics(void);
 void help_ping(void);
 void display_usage();
@@ -84,7 +84,5 @@ void update_statistics(double rtt);
 void reset_stats(void);
 unsigned short checksum(void *b, int len);
 void create_packet(struct icmphdr *icmp_hdr, int seq);
-void print_verbose_info(char *buffer, int seq, double rtt);
-void print_info(char *buffer, int seq, double rtt);
 
 #endif

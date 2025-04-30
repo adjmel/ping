@@ -36,10 +36,10 @@ void display_usage() {
     printf("Try './ft_ping '-?'' for more information.\n");
 }
 
-void run_ping_loop(int verbose, int continuous) {
+void run_ping_loop(int continuous) {
     int seq = 0;
     while (g_ping_info.running) {
-        handle_single_ping(seq++, verbose, continuous);
+        handle_single_ping(seq++, continuous);
         if (!continuous) {
             break;
         }
@@ -81,10 +81,10 @@ int main(int argc, char **argv)
         gettimeofday(&g_ping_info.stats.start_time, NULL);
         
         if (i == 0)
-            run_ping_loop(verbose, 1);  // Mode continu
+            run_ping_loop(1);  // Mode continu
         else
             {
-                run_ping_loop(verbose, 0);  // Mode non continu
+                run_ping_loop(0);  // Mode non continu
                 printf("--- %s ping statistics ---\n", g_ping_info.original_fqdn);
                 printf("1 packets transmitted, 0 packets received, 100%% packet loss\n");
             }
